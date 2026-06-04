@@ -9,7 +9,6 @@ require_once __DIR__ . '/../lib/menu.php';
 
 auth_boot();
 
-// Primeiro acesso: nenhum admin ainda → setup.
 if (!has_admin()) {
     header('Location: /admin/setup.php');
     exit;
@@ -21,7 +20,6 @@ $flash = $_GET['ok'] ?? '';
 $items = get_all_items();
 $cats  = menu_categories();
 
-// Agrupa por categoria preservando a ordem do mapa
 $grouped = [];
 foreach (array_keys($cats) as $slug) {
     $grouped[$slug] = [];
@@ -30,7 +28,7 @@ foreach ($items as $item) {
     $grouped[$item['categoria']][] = $item;
 }
 
-admin_header('Cardápio');
+admin_header('Cardápio', 'cardapio');
 ?>
 <div class="admin-head">
     <h1>Cardápio</h1>
@@ -60,16 +58,23 @@ admin_header('Cardápio');
                 <?php foreach ($rows as $item): ?>
                     <div class="item-row <?= $item['ativo'] ? '' : 'is-inactive' ?>">
                         <div class="item-row__main">
-                            <div class="item-row__name">
-                                <?= e($item['nome']) ?>
-                                <?php if ($item['badge']): ?>
-                                    <span class="tag"><?= e($item['badge']) ?></span>
-                                <?php endif; ?>
-                                <?php if (!$item['ativo']): ?>
-                                    <span class="tag tag--off">Oculto</span>
-                                <?php endif; ?>
+                            <?php if (!empty($item['imagem'])): ?>
+                                <img class="item-row__thumb" src="<?= e($item['imagem']) ?>" alt="" loading="lazy">
+                            <?php else: ?>
+                                <span class="item-row__thumb item-row__thumb--empty">—</span>
+                            <?php endif; ?>
+                            <div class="item-row__text">
+                                <div class="item-row__name">
+                                    <?= e($item['nome']) ?>
+                                    <?php if ($item['badge']): ?>
+                                        <span class="tag"><?= e($item['badge']) ?></span>
+                                    <?php endif; ?>
+                                    <?php if (!$item['ativo']): ?>
+                                        <span class="tag tag--off">Oculto</span>
+                                    <?php endif; ?>
+                                </div>
+                                <div class="item-row__desc"><?= e($item['descricao']) ?></div>
                             </div>
-                            <div class="item-row__desc"><?= e($item['descricao']) ?></div>
                         </div>
                         <div class="item-row__actions">
                             <span class="item-row__price"><?= e(format_price((int) $item['preco_centavos'])) ?></span>

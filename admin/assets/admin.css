@@ -222,6 +222,51 @@ a:hover { text-decoration: underline; }
     color: rgba(245,236,215,0.5);
 }
 
+/* ─── Nav do admin ─── */
+.admin-nav { background: var(--c-surface); border-bottom: 1px solid var(--c-line); }
+.admin-nav__inner { max-width: 1000px; margin: 0 auto; display: flex; gap: .25rem; padding: 0 1.5rem; overflow-x: auto; }
+.admin-nav__link {
+    padding: .85rem 1rem; font-size: .9rem; color: rgba(245,236,215,.6);
+    border-bottom: 2px solid transparent; white-space: nowrap;
+}
+.admin-nav__link:hover { color: var(--c-cream); text-decoration: none; }
+.admin-nav__link.is-active { color: var(--c-gold); border-bottom-color: var(--c-gold); }
+
+/* ─── Thumb na lista ─── */
+.item-row__main { display: flex; align-items: center; gap: .85rem; min-width: 0; }
+.item-row__thumb { width: 52px; height: 52px; border-radius: 8px; object-fit: cover; flex-shrink: 0; border: 1px solid var(--c-line); }
+.item-row__thumb--empty { display: grid; place-items: center; background: var(--c-bg); color: rgba(245,236,215,.3); }
+.item-row__text { min-width: 0; }
+
+/* ─── Preview de imagem no form ─── */
+.img-preview { display: flex; align-items: center; gap: 1rem; margin-bottom: .75rem; flex-wrap: wrap; }
+.img-preview img { width: 120px; height: 120px; object-fit: cover; border-radius: 10px; border: 1px solid var(--c-line); }
+
+/* ─── Inline form (categorias) ─── */
+.inline-form { display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; }
+.inline-form input[type="text"], .inline-form input[type="number"] {
+    padding: .55rem .7rem; background: var(--c-bg); border: 1px solid var(--c-line);
+    border-radius: 8px; color: var(--c-cream); font-family: inherit;
+}
+.inline-form input:focus { outline: none; border-color: var(--c-gold); }
+code { font-family: 'Courier New', monospace; color: var(--c-gold); font-size: .82rem; }
+
+/* ─── Settings ─── */
+.form--wide { max-width: 720px; }
+.settings-group {
+    border: 1px solid var(--c-line); border-radius: var(--radius);
+    padding: 1.25rem 1.25rem .5rem; margin-bottom: 1.5rem; background: var(--c-surface);
+}
+.settings-group legend {
+    padding: 0 .6rem; font-size: .8rem; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--c-gold); font-weight: 700;
+}
+.form-actions--sticky {
+    position: sticky; bottom: 0; background: linear-gradient(transparent, var(--c-bg) 40%);
+    padding: 1rem 0; margin: 0; z-index: 5;
+}
+.btn[disabled] { opacity: .4; cursor: not-allowed; }
+
 @media (max-width: 560px) {
     .field-row { grid-template-columns: 1fr; }
     .item-row { grid-template-columns: 1fr; }

@@ -4,6 +4,10 @@
 /data/*.sqlite-shm
 /data/*.db
 
+# Imagens enviadas pelo admin (mantém só o .htaccess de proteção)
+/assets/uploads/*
+!/assets/uploads/.htaccess
+
 # Logs e temporários
 *.log
 .DS_Store

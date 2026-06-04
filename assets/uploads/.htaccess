@@ -1,0 +1,12 @@
+# Diretório de imagens enviadas pelo admin.
+# Defesa em profundidade: nunca executar scripts aqui, só servir arquivos.
+php_flag engine off
+<FilesMatch "\.(php|phtml|phar|phps|pl|py|cgi|sh)$">
+  Require all denied
+</FilesMatch>
+<IfModule !mod_authz_core.c>
+  <FilesMatch "\.(php|phtml|phar|phps|pl|py|cgi|sh)$">
+    Order deny,allow
+    Deny from all
+  </FilesMatch>
+</IfModule>

@@ -1,20 +1,27 @@
 <?php
 /**
- * Partials de layout do painel admin (header + footer).
+ * Partials de layout do painel admin (header + footer + nav).
  */
 declare(strict_types=1);
 
 require_once __DIR__ . '/../config.php';
 require_once __DIR__ . '/../lib/auth.php';
+require_once __DIR__ . '/../lib/settings.php';
 
-/** Escape rápido para output. */
-function e(?string $v): string
-{
-    return htmlspecialchars((string) $v, ENT_QUOTES, 'UTF-8');
+if (!function_exists('e')) {
+    function e(?string $v): string
+    {
+        return htmlspecialchars((string) $v, ENT_QUOTES, 'UTF-8');
+    }
 }
 
-function admin_header(string $title): void
+function admin_header(string $title, string $active = ''): void
 {
+    $links = [
+        'cardapio'  => ['Cardápio', '/admin/'],
+        'categorias'=> ['Categorias', '/admin/categories.php'],
+        'config'    => ['Configurações', '/admin/settings.php'],
+    ];
     ?><!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -42,6 +49,18 @@ function admin_header(string $title): void
             <?php endif; ?>
         </div>
     </header>
+
+    <?php if (is_logged_in()): ?>
+    <nav class="admin-nav" aria-label="Seções do admin">
+        <div class="admin-nav__inner">
+            <?php foreach ($links as $key => [$label, $href]): ?>
+                <a class="admin-nav__link <?= $active === $key ? 'is-active' : '' ?>"
+                   href="<?= e($href) ?>"><?= e($label) ?></a>
+            <?php endforeach; ?>
+        </div>
+    </nav>
+    <?php endif; ?>
+
     <main class="admin-wrap">
     <?php
 }
