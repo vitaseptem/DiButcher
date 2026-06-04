@@ -32,7 +32,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = 'As senhas não conferem.';
     } elseif (create_admin($user, $pass)) {
         login($user, $pass);
-        header('Location: /admin/');
+        // Vai direto para o cadastro do 2FA (Google Authenticator)
+        header('Location: /admin/enroll.php');
         exit;
     } else {
         $error = 'Não foi possível criar o usuário. Tente outro nome.';

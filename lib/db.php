@@ -99,6 +99,10 @@ function db_migrate(PDO $pdo): void
 
     // Coluna de imagem (para bancos criados antes desta versão)
     db_ensure_column($pdo, 'menu_items', 'imagem', 'TEXT');
+
+    // Colunas de 2FA (TOTP) no usuário admin
+    db_ensure_column($pdo, 'admin_users', 'totp_secret', 'TEXT');
+    db_ensure_column($pdo, 'admin_users', 'totp_enabled', 'INTEGER NOT NULL DEFAULT 0');
 }
 
 /**

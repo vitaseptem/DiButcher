@@ -9,6 +9,7 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/db.php';
+require_once __DIR__ . '/totp.php';
 
 /**
  * Inicia a sessão com parâmetros de cookie seguros.
@@ -65,16 +66,46 @@ function create_admin(string $username, string $password): bool
 }
 
 /**
- * Verifica credenciais e autentica a sessão.
+ * Busca um usuário admin por nome.
  */
-function login(string $username, string $password): bool
+function get_admin_by_username(string $username): ?array
 {
     $stmt = db()->prepare('SELECT * FROM admin_users WHERE username = :u');
     $stmt->execute([':u' => trim($username)]);
-    $user = $stmt->fetch();
+    return $stmt->fetch() ?: null;
+}
+
+/**
+ * Busca um usuário admin por ID.
+ */
+function get_admin(int $id): ?array
+{
+    $stmt = db()->prepare('SELECT * FROM admin_users WHERE id = :id');
+    $stmt->execute([':id' => $id]);
+    return $stmt->fetch() ?: null;
+}
+
+/**
+ * Verifica credenciais (e 2FA, se ativo) e autentica a sessão.
+ *
+ * Retorna:
+ *   'ok'              → autenticado
+ *   'bad_credentials' → usuário/senha incorretos
+ *   'need_2fa'        → senha ok, mas falta o código (ou veio errado)
+ */
+function login(string $username, string $password, string $code = ''): string
+{
+    $user = get_admin_by_username($username);
 
     if (!$user || !password_verify($password, $user['password_hash'])) {
-        return false;
+        return 'bad_credentials';
+    }
+
+    // 2FA obrigatório para esta conta?
+    if (!empty($user['totp_enabled']) && !empty($user['totp_secret'])) {
+        if ($code === '' || !totp_verify($user['totp_secret'], $code)) {
+            return 'need_2fa';
+        }
     }
 
     // Rehash se o algoritmo padrão mudou
@@ -86,7 +117,79 @@ function login(string $username, string $password): bool
     session_regenerate_id(true);
     $_SESSION['admin_id']   = (int) $user['id'];
     $_SESSION['admin_user'] = $user['username'];
-    return true;
+    return 'ok';
+}
+
+/**
+ * Confere usuário/senha (sem mexer na sessão). Retorna a linha do
+ * usuário se a senha estiver correta, senão null.
+ */
+function verify_credentials(string $username, string $password): ?array
+{
+    $user = get_admin_by_username($username);
+    if (!$user || !password_verify($password, $user['password_hash'])) {
+        return null;
+    }
+    if (password_needs_rehash($user['password_hash'], PASSWORD_DEFAULT)) {
+        $upd = db()->prepare('UPDATE admin_users SET password_hash = :h WHERE id = :id');
+        $upd->execute([':h' => password_hash($password, PASSWORD_DEFAULT), ':id' => $user['id']]);
+    }
+    return $user;
+}
+
+/**
+ * Efetiva a sessão autenticada para um usuário já validado.
+ */
+function start_admin_session(array $user): void
+{
+    session_regenerate_id(true);
+    $_SESSION['admin_id']   = (int) $user['id'];
+    $_SESSION['admin_user'] = $user['username'];
+    unset($_SESSION['pending_2fa_id'], $_SESSION['pending_2fa_time']);
+}
+
+/* ─────────────────────────────────────────────────────────────
+ * 2FA (TOTP)
+ * ───────────────────────────────────────────────────────────── */
+
+/** Grava (ou regrava) o segredo TOTP de um usuário, deixando-o pendente. */
+function set_admin_totp_secret(int $id, string $secret): void
+{
+    $stmt = db()->prepare('UPDATE admin_users SET totp_secret = :s, totp_enabled = 0 WHERE id = :id');
+    $stmt->execute([':s' => $secret, ':id' => $id]);
+}
+
+/** Ativa o 2FA do usuário (após confirmar um código válido). */
+function enable_admin_totp(int $id): void
+{
+    db()->prepare('UPDATE admin_users SET totp_enabled = 1 WHERE id = :id')->execute([':id' => $id]);
+}
+
+/** Desativa o 2FA do usuário. */
+function disable_admin_totp(int $id): void
+{
+    db()->prepare('UPDATE admin_users SET totp_enabled = 0, totp_secret = NULL WHERE id = :id')
+        ->execute([':id' => $id]);
+}
+
+/** O usuário logado tem 2FA ativo? */
+function current_admin_has_2fa(): bool
+{
+    if (!is_logged_in()) {
+        return false;
+    }
+    $u = get_admin((int) $_SESSION['admin_id']);
+    return $u && !empty($u['totp_enabled']);
+}
+
+/** Altera a senha de um usuário. */
+function change_admin_password(int $id, string $newPassword): bool
+{
+    if (strlen($newPassword) < 8) {
+        return false;
+    }
+    $stmt = db()->prepare('UPDATE admin_users SET password_hash = :h WHERE id = :id');
+    return $stmt->execute([':h' => password_hash($newPassword, PASSWORD_DEFAULT), ':id' => $id]);
 }
 
 /**

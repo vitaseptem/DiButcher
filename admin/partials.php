@@ -21,6 +21,7 @@ function admin_header(string $title, string $active = ''): void
         'cardapio'  => ['Cardápio', '/admin/'],
         'categorias'=> ['Categorias', '/admin/categories.php'],
         'config'    => ['Configurações', '/admin/settings.php'],
+        'conta'     => ['Minha conta', '/admin/account.php'],
     ];
     ?><!DOCTYPE html>
 <html lang="pt-BR">

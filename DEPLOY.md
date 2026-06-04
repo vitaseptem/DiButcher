@@ -88,6 +88,30 @@ Provedores com PHP 8.2+ e cPanel: Hostinger, HostGator, KingHost, Locaweb.
 
 ---
 
+## Segurança do admin (2FA)
+
+O painel tem **verificação em duas etapas** (TOTP) compatível com Google
+Authenticator, Authy e Microsoft Authenticator.
+
+- No primeiro acesso (`/admin/`), você cria o usuário e é levado direto ao
+  cadastro do 2FA. Abra o app → **“Inserir chave de configuração”** → cole a
+  chave mostrada na tela → confirme com o código de 6 dígitos.
+- **Guarde a chave de configuração** num lugar seguro: com ela você
+  reconfigura o app se trocar de celular.
+- Depois de criada sua conta, **ninguém consegue cadastrar outro admin** pelo
+  site — a tela de criação fica bloqueada permanentemente.
+
+### Perdi o celular E a chave (recuperação)
+
+Rode no servidor, via terminal/SSH, a partir da pasta do site:
+
+```bash
+php bin/reset-2fa.php
+```
+
+Isso desativa o 2FA. Faça login só com a senha e reative em **Minha conta**.
+(O script recusa execução pelo navegador — só funciona por linha de comando.)
+
 ## Backup do cardápio
 
 Como o banco é um arquivo só, backup = **baixar `data/dibutcher.sqlite`**.

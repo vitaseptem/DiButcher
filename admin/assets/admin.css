@@ -267,6 +267,21 @@ code { font-family: 'Courier New', monospace; color: var(--c-gold); font-size: .
 }
 .btn[disabled] { opacity: .4; cursor: not-allowed; }
 
+/* ─── Enrollment 2FA ─── */
+.enroll { max-width: 560px; }
+.enroll__steps { margin: 0 0 1.25rem 1.1rem; display: flex; flex-direction: column; gap: .5rem; color: var(--c-cream); }
+.enroll__steps li { line-height: 1.5; }
+.enroll__key {
+    background: var(--c-bg); border: 1px dashed var(--c-gold);
+    border-radius: var(--radius); padding: 1rem 1.25rem; margin-bottom: 1rem; text-align: center;
+}
+.enroll__key-label { display: block; font-size: .75rem; letter-spacing: 2px; text-transform: uppercase; color: var(--c-muted, rgba(245,236,215,.5)); margin-bottom: .5rem; }
+.enroll__key-value { font-family: 'Courier New', monospace; font-size: 1.3rem; letter-spacing: .15em; color: var(--c-gold); word-break: break-all; }
+.enroll__adv { margin-bottom: 1rem; }
+.enroll__adv summary { cursor: pointer; color: rgba(245,236,215,.6); font-size: .85rem; }
+.enroll__uri { display: block; margin-top: .5rem; padding: .6rem; background: var(--c-bg); border-radius: 8px; font-size: .7rem; color: rgba(245,236,215,.6); word-break: break-all; }
+.enroll__warn { background: rgba(139,0,0,.14); border: 1px solid var(--c-red); border-radius: var(--radius); padding: .8rem 1rem; font-size: .85rem; color: #ffd9d9; }
+
 @media (max-width: 560px) {
     .field-row { grid-template-columns: 1fr; }
     .item-row { grid-template-columns: 1fr; }
