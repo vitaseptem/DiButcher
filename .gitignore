@@ -1,0 +1,13 @@
+# Banco de dados SQLite (gerado em runtime — NÃO versionar)
+/data/*.sqlite
+/data/*.sqlite-wal
+/data/*.sqlite-shm
+/data/*.db
+
+# Logs e temporários
+*.log
+.DS_Store
+Thumbs.db
+
+# Dependências (caso futuramente use Composer)
+/vendor/

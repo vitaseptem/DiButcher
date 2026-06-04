@@ -1,0 +1,7 @@
+# Arquivos de lógica (PHP includes) não devem ser acessados diretamente.
+Require all denied
+
+<IfModule !mod_authz_core.c>
+  Order deny,allow
+  Deny from all
+</IfModule>

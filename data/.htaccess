@@ -1,0 +1,9 @@
+# Bloqueia QUALQUER acesso web a este diretório.
+# O banco SQLite vive aqui e jamais deve ser baixado pela internet.
+Require all denied
+
+# Fallback para Apache < 2.4
+<IfModule !mod_authz_core.c>
+  Order deny,allow
+  Deny from all
+</IfModule>

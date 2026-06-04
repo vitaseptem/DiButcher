@@ -8,15 +8,26 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/config.php';
+require_once __DIR__ . '/lib/menu.php';
 
-/** @var array<string, array<int, array{nome:string,descricao:string,preco:string,badge:?string}>> $menu */
-$menu = $GLOBALS['menu'];
-
-$categorias = [
-    'smashes'         => 'Smashes',
-    'acompanhamentos' => 'Acompanhamentos',
-    'bebidas'         => 'Bebidas',
-];
+/**
+ * Cardápio vem do banco SQLite. Se o banco estiver indisponível
+ * (ex.: permissão de escrita), cai no array do config.php — o site
+ * público nunca quebra.
+ *
+ * @var array<string, array<int, array{nome:string,descricao:string,preco:string,badge:?string}>> $menu
+ */
+try {
+    $menu       = get_menu_grouped(true);
+    $categorias = menu_categories();
+} catch (Throwable $e) {
+    $menu       = $GLOBALS['menu'];
+    $categorias = [
+        'smashes'         => 'Smashes',
+        'acompanhamentos' => 'Acompanhamentos',
+        'bebidas'         => 'Bebidas',
+    ];
+}
 
 $waMain = htmlspecialchars(whatsapp_link(), ENT_QUOTES, 'UTF-8');
 ?>
