@@ -1,0 +1,76 @@
+# ════════════════════════════════════════════════════════════════
+#  Di Bútcher Premium Burger — Apache Config
+#  Security Headers · Cache · Compression · Clean URLs
+# ════════════════════════════════════════════════════════════════
+
+# ───────────────────────────────────────────────
+# Security Headers
+# ───────────────────────────────────────────────
+<IfModule mod_headers.c>
+  Header set X-Content-Type-Options "nosniff"
+  Header set X-Frame-Options "SAMEORIGIN"
+  Header set X-XSS-Protection "1; mode=block"
+  Header set Referrer-Policy "strict-origin-when-cross-origin"
+  Header set Permissions-Policy "geolocation=(), microphone=(), camera=()"
+  Header always unset X-Powered-By
+  Header unset X-Powered-By
+</IfModule>
+
+# Esconde a versão do servidor
+ServerSignature Off
+
+# ───────────────────────────────────────────────
+# Cache Control — assets imutáveis
+# ───────────────────────────────────────────────
+<IfModule mod_headers.c>
+  <FilesMatch "\.(css|js|png|jpg|jpeg|gif|ico|svg|woff|woff2)$">
+    Header set Cache-Control "max-age=31536000, public, immutable"
+  </FilesMatch>
+  <FilesMatch "\.(php|html)$">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+</IfModule>
+
+# ───────────────────────────────────────────────
+# Gzip / Deflate Compression
+# ───────────────────────────────────────────────
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/css text/xml
+  AddOutputFilterByType DEFLATE application/javascript application/x-javascript
+  AddOutputFilterByType DEFLATE application/json application/xml
+  AddOutputFilterByType DEFLATE image/svg+xml
+</IfModule>
+
+# ───────────────────────────────────────────────
+# Clean URLs — remove a extensão .php
+# ───────────────────────────────────────────────
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # Força HTTPS
+  RewriteCond %{HTTPS} off
+  RewriteCond %{HTTP:X-Forwarded-Proto} !https
+  RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]
+
+  # Redireciona /arquivo.php → /arquivo
+  RewriteCond %{THE_REQUEST} \s/+([^.\s]+)\.php[\s?] [NC]
+  RewriteRule ^ /%1 [R=301,L]
+
+  # Resolve /arquivo → /arquivo.php internamente
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^([^.]+)$ $1.php [NC,L]
+</IfModule>
+
+# ───────────────────────────────────────────────
+# Protege arquivos sensíveis
+# ───────────────────────────────────────────────
+<FilesMatch "^(config\.php|\.htaccess|\.git.*)$">
+  Require all denied
+</FilesMatch>
+
+# Documento de erro
+ErrorDocument 404 /index.php
+
+# Charset padrão
+AddDefaultCharset UTF-8
