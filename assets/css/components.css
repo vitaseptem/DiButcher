@@ -165,3 +165,40 @@
 .cart-line__sub { font-family: var(--f-display); color: var(--c-gold); font-size: 1rem; white-space: nowrap; }
 
 .checkout__items .cart-line__qty button { width: 28px; height: 28px; }
+
+/* ─── Mobile bottom nav (estilo app) ─── */
+.mobile-nav {
+    position: fixed; inset: auto 0 0 0; z-index: 95;
+    display: flex; align-items: stretch;
+    background: rgba(13, 13, 13, .94);
+    backdrop-filter: blur(14px) saturate(140%);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+    border-top: 1px solid rgba(var(--c-gold-rgb), .22);
+    padding-bottom: env(safe-area-inset-bottom, 0);
+}
+.mobile-nav__item {
+    flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
+    padding: .55rem 0 .5rem; color: var(--c-muted);
+    font-family: var(--f-head); font-size: .62rem; letter-spacing: .04em; text-transform: uppercase;
+    transition: color var(--ease);
+}
+.mobile-nav__item svg { width: 21px; height: 21px; }
+.mobile-nav__item.is-active { color: var(--c-gold); }
+.mobile-nav__item:active { color: var(--c-cream); }
+.mobile-nav__cart-wrap { position: relative; display: inline-flex; }
+.mobile-nav__count {
+    position: absolute; top: -6px; right: -8px; min-width: 16px; height: 16px; padding: 0 3px;
+    border-radius: 999px; background: var(--c-red); color: var(--c-cream);
+    font-family: var(--f-body); font-size: .62rem; font-weight: 600; display: grid; place-items: center;
+}
+
+/* Em telas largas, esconde a barra inferior e usa a nav do topo */
+@media (min-width: 920px) {
+    .mobile-nav { display: none; }
+}
+/* Em mobile: dá respiro no rodapé e sobe o botão flutuante acima da barra */
+@media (max-width: 919px) {
+    body { padding-bottom: 64px; }
+    .wa-float { bottom: calc(64px + env(safe-area-inset-bottom, 0px) + 12px); }
+    .site-footer { margin-bottom: 8px; }
+}

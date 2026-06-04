@@ -29,7 +29,17 @@ function icon(string $name): string
         'pin'      => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>',
         'clock'    => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><polyline points="12 7 12 12 15 14"></polyline></svg>',
         'plus'     => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>',
+        'minus'    => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line></svg>',
         'close'    => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>',
+        'user'     => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>',
+        'phone'    => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>',
+        'truck'    => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>',
+        'plate'    => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="4"></circle></svg>',
+        'money'    => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="6" width="20" height="12" rx="2"></rect><circle cx="12" cy="12" r="2.5"></circle><path d="M6 12h.01M18 12h.01"></path></svg>',
+        'note'     => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="8" y1="13" x2="16" y2="13"></line><line x1="8" y1="17" x2="13" y2="17"></line></svg>',
+        'cleaver'  => '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 3l1.5 1.5L9 9l-1.4 1.4-1-1L3 13.9V21h2.1l4.5-4.5 1 1L12 17l9 9-1.4-1.4-8.2-8.2 6.3-6.3c1.2-1.2 1.2-3.1 0-4.3-1.2-1.2-3.1-1.2-4.3 0L9 7.6 3 3z"/></svg>',
+        'home'     => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9.5L12 3l9 6.5"></path><path d="M5 10v10h14V10"></path></svg>',
+        'menu'     => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><line x1="4" y1="7" x2="20" y2="7"></line><line x1="4" y1="12" x2="20" y2="12"></line><line x1="4" y1="17" x2="20" y2="17"></line></svg>',
     ];
     return $icons[$name] ?? '';
 }
@@ -46,6 +56,7 @@ function page_start(array $opts = []): void
     $title   = $opts['title'] ?? cfg('seo_title', $full);
     $desc    = $opts['description'] ?? cfg('seo_description');
     $active  = $opts['active'] ?? '';
+    $GLOBALS['__page_active'] = $active;
     $siteUrl = rtrim(cfg('site_url'), '/');
     $path    = $opts['path'] ?? ($_SERVER['REQUEST_URI'] ?? '/');
     $canonical = $siteUrl . $path;
@@ -101,6 +112,7 @@ function page_end(): void
     <?php if (cart_enabled()) { cart_drawer(); } ?>
     <a class="wa-float" href="<?= e(wa_link()) ?>" target="_blank" rel="noopener"
        aria-label="Fazer pedido pelo WhatsApp"><?= icon('whatsapp') ?></a>
+    <?php mobile_nav($GLOBALS['__page_active'] ?? ''); ?>
 
     <script>
     window.DIBUTCHER = {
@@ -309,7 +321,9 @@ function menu_card(array $item): void
                             data-add-to-cart
                             data-id="<?= (int) $item['id'] ?>"
                             data-nome="<?= e($item['nome']) ?>"
-                            data-preco="<?= (int) $item['preco_centavos'] ?>">
+                            data-preco="<?= (int) $item['preco_centavos'] ?>"
+                            data-img="<?= e($item['imagem'] ?? '') ?>"
+                            data-desc="<?= e($item['descricao'] ?? '') ?>">
                         <?= icon('plus') ?> Adicionar
                     </button>
                 <?php else: ?>
@@ -320,6 +334,33 @@ function menu_card(array $item): void
             </div>
         </div>
     </article>
+    <?php
+}
+
+/**
+ * Barra de navegação inferior (mobile · estilo app).
+ */
+function mobile_nav(string $active = ''): void
+{
+    $items = [
+        ['', '/', 'home', 'Início'],
+        ['cardapio', '/cardapio', 'menu', 'Cardápio'],
+        ['sobre', '/sobre', 'cleaver', 'Sobre'],
+        ['contato', '/contato', 'phone', 'Contato'],
+    ];
+    ?>
+    <nav class="mobile-nav" aria-label="Navegação rápida">
+        <a class="mobile-nav__item <?= $active === '' ? 'is-active' : '' ?>" href="/"><?= icon('home') ?><span>Início</span></a>
+        <a class="mobile-nav__item <?= $active === 'cardapio' ? 'is-active' : '' ?>" href="/cardapio"><?= icon('menu') ?><span>Cardápio</span></a>
+        <?php if (cart_enabled()): ?>
+            <button class="mobile-nav__item mobile-nav__cart" type="button" data-cart-open aria-label="Abrir carrinho">
+                <span class="mobile-nav__cart-wrap"><?= icon('cart') ?><span class="mobile-nav__count" data-cart-count hidden>0</span></span>
+                <span>Carrinho</span>
+            </button>
+        <?php endif; ?>
+        <a class="mobile-nav__item <?= $active === 'sobre' ? 'is-active' : '' ?>" href="/sobre"><?= icon('cleaver') ?><span>Sobre</span></a>
+        <a class="mobile-nav__item <?= $active === 'contato' ? 'is-active' : '' ?>" href="/contato"><?= icon('phone') ?><span>Contato</span></a>
+    </nav>
     <?php
 }
 
